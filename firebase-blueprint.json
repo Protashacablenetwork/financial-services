@@ -1,0 +1,149 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Application user profile and credentials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "pin": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "suspended"] }
+      },
+      "required": ["id", "name", "phone", "pin", "role", "createdAt", "status"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "amount": { "type": "number" },
+        "person": { "type": "string" },
+        "date": { "type": "string" },
+        "channel": { "type": "string" },
+        "note": { "type": "string" },
+        "trxId": { "type": "string" },
+        "method": { "type": "string" },
+        "category": { "type": "string" },
+        "isDeleted": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "type", "amount", "person", "date"]
+    },
+    "PaymentChannel": {
+      "title": "PaymentChannel",
+      "description": "Payment channel configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "balance": { "type": "number" },
+        "color": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "isDefault": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "type"]
+    },
+    "BannerAd": {
+      "title": "BannerAd",
+      "description": "Promotional broadband banner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "titleBn": { "type": "string" },
+        "titleEn": { "type": "string" },
+        "subtitleBn": { "type": "string" },
+        "subtitleEn": { "type": "string" },
+        "badgeBn": { "type": "string" },
+        "badgeEn": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "linkUrl": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "priority": { "type": "number" }
+      },
+      "required": ["id", "titleBn", "imageUrl"]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "System or weather alert notification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "titleBn": { "type": "string" },
+        "titleEn": { "type": "string" },
+        "messageBn": { "type": "string" },
+        "messageEn": { "type": "string" },
+        "date": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "type": { "type": "string" },
+        "actionUrl": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["id", "titleBn", "messageBn", "date", "isRead"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "System audit log record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "action": { "type": "string" },
+        "actionBn": { "type": "string" },
+        "user": { "type": "string" },
+        "details": { "type": "string" },
+        "time": { "type": "number" }
+      },
+      "required": ["id", "action", "actionBn", "user", "time"]
+    },
+    "AppSetting": {
+      "title": "AppSetting",
+      "description": "Global application setting or config object",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "data": { "type": "object" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Registered app users and admin profiles"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Financial income and expense transaction records"
+    },
+    "/channels/{channelId}": {
+      "schema": "PaymentChannel",
+      "description": "Payment channels and account configurations"
+    },
+    "/banners/{bannerId}": {
+      "schema": "BannerAd",
+      "description": "Homepage broadband banner ads"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "NotificationItem",
+      "description": "System notifications and weather alerts"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Administrative activity and audit history"
+    },
+    "/settings/{settingId}": {
+      "schema": "AppSetting",
+      "description": "Footer configuration, branding, and app metadata"
+    }
+  }
+}

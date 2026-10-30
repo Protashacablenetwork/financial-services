@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": "admin-primary",
+      "name": "প্রত্যাশা অ্যাডমিন",
+      "phone": "01777877207",
+      "avatarUrl": "",
+      "pin": "12588",
+      "role": "admin",
+      "createdAt": "2026-10-27T19:59:19.000Z",
+      "status": "active"
+    },
+    {
+      "id": "user-demo-1",
+      "name": "মো: রিয়াদ মিয়া",
+      "phone": "01884542812",
+      "avatarUrl": "",
+      "pin": "1234",
+      "role": "user",
+      "createdAt": "2026-10-27T19:59:19.000Z",
+      "status": "active"
+    }
+  ],
+  "test": "hello"
+}

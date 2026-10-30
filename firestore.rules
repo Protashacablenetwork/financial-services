@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-\\.:]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validation for User
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'name', 'phone', 'pin', 'role', 'createdAt', 'status']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
+             data.phone is string && data.phone.size() >= 10 && data.phone.size() <= 20 &&
+             data.pin is string && data.pin.size() >= 4 && data.pin.size() <= 30 &&
+             data.role in ['admin', 'user'] &&
+             data.createdAt is string &&
+             data.status in ['active', 'suspended'];
+    }
+
+    // Validation for Transaction
+    function isValidTransaction(data) {
+      return data.keys().hasAll(['id', 'type', 'amount', 'person', 'date']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.type is string && data.type.size() <= 32 &&
+             data.amount is number &&
+             data.person is string && data.person.size() <= 200 &&
+             data.date is string;
+    }
+
+    // Validation for Payment Channel
+    function isValidChannel(data) {
+      return data.keys().hasAll(['id', 'name', 'type']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 100 &&
+             data.type is string && data.type.size() <= 50;
+    }
+
+    // Validation for Banner
+    function isValidBanner(data) {
+      return data.keys().hasAll(['id', 'titleBn', 'imageUrl']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.titleBn is string && data.titleBn.size() <= 300 &&
+             data.imageUrl is string && data.imageUrl.size() <= 2000;
+    }
+
+    // Validation for Notification
+    function isValidNotification(data) {
+      return data.keys().hasAll(['id', 'titleBn', 'messageBn', 'date', 'isRead']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.titleBn is string && data.titleBn.size() <= 200 &&
+             data.messageBn is string && data.messageBn.size() <= 1000 &&
+             data.date is string &&
+             data.isRead is bool;
+    }
+
+    // Validation for Audit Log
+    function isValidAuditLog(data) {
+      return data.keys().hasAll(['id', 'action', 'actionBn', 'user', 'time']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.action is string && data.action.size() <= 100 &&
+             data.actionBn is string && data.actionBn.size() <= 200 &&
+             data.user is string && data.user.size() <= 100 &&
+             data.time is number;
+    }
+
+    // Validation for Settings
+    function isValidSetting(data) {
+      return data.keys().hasAll(['id']) &&
+             data.id is string && data.id.size() <= 128;
+    }
+
+    match /users/{userId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(userId) && isValidUser(incoming());
+      allow delete: if true;
+    }
+
+    match /transactions/{transactionId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(transactionId) && isValidTransaction(incoming());
+      allow delete: if true;
+    }
+
+    match /channels/{channelId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(channelId) && isValidChannel(incoming());
+      allow delete: if true;
+    }
+
+    match /banners/{bannerId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(bannerId) && isValidBanner(incoming());
+      allow delete: if true;
+    }
+
+    match /notifications/{notificationId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(notificationId) && isValidNotification(incoming());
+      allow delete: if true;
+    }
+
+    match /audit_logs/{logId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(logId) && isValidAuditLog(incoming());
+      allow delete: if true;
+    }
+
+    match /settings/{settingId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(settingId) && isValidSetting(incoming());
+      allow delete: if true;
+    }
+  }
+}
